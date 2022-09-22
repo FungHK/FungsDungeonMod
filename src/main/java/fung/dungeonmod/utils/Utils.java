@@ -22,6 +22,6 @@ public class Utils {
     }
 
     public static void addChatMessage(String Message) {
-        mc.thePlayer.addChatMessage(new ChatComponentText("§a[Fung] §f" + translateAlternateColorCodes(Message)));
+        mc.thePlayer.addChatMessage(new ChatComponentText("§a[Fung] " + translateAlternateColorCodes(Message)));
     }
 }

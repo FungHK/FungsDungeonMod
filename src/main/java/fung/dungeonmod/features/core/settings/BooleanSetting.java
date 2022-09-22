@@ -2,11 +2,11 @@ package fung.dungeonmod.features.core.settings;
 
 import fung.dungeonmod.features.core.Setting;
 
-public class Boolean extends Setting {
+public class BooleanSetting extends Setting {
     public boolean value;
     public boolean defaultValue;
 
-    public Boolean(String name, boolean defaultValue) {
+    public BooleanSetting(String name, boolean defaultValue) {
         super(name);
         this.defaultValue = defaultValue;
     }
