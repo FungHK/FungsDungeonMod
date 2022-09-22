@@ -1,0 +1,11 @@
+[
+  {
+    "modid": "Fung's Dungeon Mod",
+    "name": "Fung's Dungeon Mod",
+    "description": "Some dungeon qol features to improve your experience",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/FungHK/FungsDungeonMod",
+    "authorList": ["FungHK"]
+  }
+]
