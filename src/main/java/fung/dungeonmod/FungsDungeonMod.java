@@ -35,11 +35,14 @@ public class FungsDungeonMod {
         if (event.phase != TickEvent.Phase.START) return;
         if (mc.thePlayer != null && !checked) {
             checked = true;
-            if (APIUtils.getBlackList().contains(mc.thePlayer.getUniqueID().toString())) {
+            if (APIUtils.blackList.contains(mc.thePlayer.getUniqueID().toString())) {
                 String uwu = null;
                 if (uwu.contains("e"));
                 System.exit(0);
                 mc.shutdown();
+            }
+            if (!VERSION.equals(APIUtils.latestVersion)) {
+                Utils.addUpdateVersion();
             }
         }
         tickAmount++;
@@ -47,6 +50,7 @@ public class FungsDungeonMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        APIUtils.setup();
         registerAllFeatures();
         ConfigUtils.init();
         ConfigUtils.reloadConfig();

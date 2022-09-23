@@ -14,6 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class APIUtils {
+	public static String blackList, latestVersion, discordLink;
+
 	public static int getSecretCount(String username) {
 		JsonObject secretResponse = getResponse("https://api.hypixel.net/player?key=" + FungsDungeonMod.APIKey + "&uuid=" + getUUID(username), true);
 		if (secretResponse == null) return 0;
@@ -25,10 +27,12 @@ public class APIUtils {
 				).getAsInt();
 	}
 
-	public static String getBlackList() {
+	public static void setup() {
 		JsonObject uuidResponse = getResponse("https://raw.githubusercontent.com/FungHK/FungsDungeonMod/main/ModStuff", false);
-		if (uuidResponse == null) return null;
-		return uuidResponse.get("black_list").getAsString();
+		if (uuidResponse == null) return;
+		blackList = uuidResponse.get("black_list").getAsString();
+		latestVersion = uuidResponse.get("version").getAsString();
+		discordLink = uuidResponse.get("discord").getAsString();
 	}
 
 	public static String getUUID(String username) {
