@@ -17,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RunReview extends Feature {
-    public static ArrayList<String> database = new ArrayList<>();
     public static BooleanSetting debug, sendParty;
 
     private static boolean sent, dungeonEnding = false;
@@ -36,14 +35,14 @@ public class RunReview extends Feature {
         if (event.phase != TickEvent.Phase.START) return;
         if (FungsDungeonMod.tickAmount % 20 == 0 && !dungeonEnding && SkyblockUtils.inDungeonBoss) {
             dungeonEnding = true;
-            Utils.addChatMessage("Boss room");
+            if (debug.isEnabled()) Utils.addChatMessage("Boss room");
             new Thread(() -> {
                 try {
-                    Thread.sleep(10000);
-                    Utils.addChatMessage("Start counting");
+                    Thread.sleep(5000);
+                    if (debug.isEnabled())Utils.addChatMessage("Start counting");
                     for (int i = 0; i < partyData.size(); i++) {
                         String player = partyData.get(i).split(",")[0];
-                        Utils.addChatMessage("checking " + player);
+                        if (debug.isEnabled()) Utils.addChatMessage("checking " + player);
                         partyData.set(i, player + "," + (APIUtils.getSecretCount(player) - Integer.parseInt(partyData.get(i).split(",")[1])));
                     }
                 } catch (Exception ignored) {}
@@ -92,7 +91,7 @@ public class RunReview extends Feature {
                         message2 += "\n &d" + name + ": &5" + secret;
                         msg += ", " + name + " (" + secret + ")";
                     }
-                    Utils.addChatMessage(message2);
+                    if (debug.isEnabled()) Utils.addChatMessage(message2);
                     if (sendParty.isEnabled()) {
                         Thread.sleep(4000);
                         Utils.sendMessage(msg.replaceFirst(", ", ""));
@@ -133,7 +132,7 @@ public class RunReview extends Feature {
         new Thread(() -> {
             for (String player : party) {
                 int secrets = APIUtils.getSecretCount(player);
-                Utils.addChatMessage("adding " + player + " to current database, " + secrets);
+                if (debug.isEnabled()) Utils.addChatMessage("adding " + player + " to current database, " + secrets);
                 partyData.add(player + "," + secrets);
             }
         }).start();

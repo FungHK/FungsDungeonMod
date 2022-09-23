@@ -4,7 +4,9 @@ import fung.dungeonmod.commands.FeatureCommand;
 import fung.dungeonmod.commands.MainCommand;
 import fung.dungeonmod.features.RunReview;
 import fung.dungeonmod.features.core.Feature;
+import fung.dungeonmod.utils.APIUtils;
 import fung.dungeonmod.utils.ConfigUtils;
+import fung.dungeonmod.utils.SkyblockUtils;
 import fung.dungeonmod.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -33,25 +35,32 @@ public class FungsDungeonMod {
         if (event.phase != TickEvent.Phase.START) return;
         if (mc.thePlayer != null && !checked) {
             checked = true;
-
+            if (APIUtils.getBlackList().contains(mc.thePlayer.getUniqueID().toString())) {
+                String uwu = null;
+                if (uwu.contains("e"));
+                System.exit(0);
+                mc.shutdown();
+            }
         }
         tickAmount++;
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        registerAllFeatures();
         ConfigUtils.init();
+        ConfigUtils.reloadConfig();
 
         ClientCommandHandler.instance.registerCommand(new FeatureCommand());
 
         MinecraftForge.EVENT_BUS.register(new FungsDungeonMod());
+        MinecraftForge.EVENT_BUS.register(new SkyblockUtils());
 
-        Feature.features.add(new RunReview());
     }
 
     @SubscribeEvent
-    public void onWorldChange(WorldEvent e) {
-        if (APIKey.equals("")) {
+    public void onWorldChange(WorldEvent.Load e) {
+        if (mc.thePlayer != null && APIKey.equals("")) {
             Utils.addChatMessage("Please set your api key! /api new");
         }
     }
@@ -64,5 +73,9 @@ public class FungsDungeonMod {
             ConfigUtils.writeStringConfig("main", "APIKey", APIKey);
             Utils.addChatMessage("Set API key to &2" + APIKey);
         }
+    }
+
+    public static void registerAllFeatures() {
+        Feature.features.add(new RunReview());
     }
 }

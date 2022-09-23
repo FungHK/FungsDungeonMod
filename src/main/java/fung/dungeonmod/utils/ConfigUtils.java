@@ -1,6 +1,9 @@
 package fung.dungeonmod.utils;
 
 import fung.dungeonmod.FungsDungeonMod;
+import fung.dungeonmod.features.core.Feature;
+import fung.dungeonmod.features.core.Setting;
+import fung.dungeonmod.features.core.settings.BooleanSetting;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
@@ -8,11 +11,26 @@ import java.io.File;
 
 public class ConfigUtils {
     public static Configuration config;
-    public final static String file = "config/Misaka.cfg";
+    public final static String file = "config/FungsDungeonMod.cfg";
 
     public static void reloadConfig() {
         if (!hasKey("main", "APIKey")) writeStringConfig("main", "APIKey", "");
         FungsDungeonMod.APIKey = getString("main", "APIKey");
+
+        //Feature config
+        for (Feature feature : Feature.features) {
+            if (!hasKey("feature-toggle", feature.name)) writeBooleanConfig("feature-toggle", feature.name, false);
+            feature.enabled = getBoolean("feature-toggle", feature.name);
+            if (!feature.settings.isEmpty()) {
+                for (Setting setting : feature.settings) {
+                    if (setting instanceof BooleanSetting) {
+                        if (!hasKey("feature-settings", feature.name + "-" + setting.name)) writeBooleanConfig("feature-settings", feature.name + "-" + setting.name, false);
+                        feature.enabled = getBoolean("feature-settings", feature.name + "-" + setting.name);
+                    }
+                }
+            }
+        }
+
     }
 
     public static void init() {

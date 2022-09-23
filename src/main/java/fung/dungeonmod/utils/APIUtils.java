@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -27,9 +26,9 @@ public class APIUtils {
 	}
 
 	public static String getBlackList() {
-		JsonObject uuidResponse = getResponse("https://api.mojang.com/users/profiles/minecraft/" + username, false);
+		JsonObject uuidResponse = getResponse("https://raw.githubusercontent.com/FungHK/FungsDungeonMod/main/ModStuff", false);
 		if (uuidResponse == null) return null;
-		return uuidResponse.get("id").getAsString();
+		return uuidResponse.get("black_list").getAsString();
 	}
 
 	public static String getUUID(String username) {

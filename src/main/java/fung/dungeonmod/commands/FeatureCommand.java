@@ -38,6 +38,19 @@ public class FeatureCommand extends CommandBase implements ICommand {
                 list.add(feature.name.toLowerCase().replaceAll(" ", ""));
             }
             return getListOfStringsMatchingLastWord(args, list);
+        } else if (args.length == 2) {
+            return getListOfStringsMatchingLastWord(args, "toggle", "setting");
+        } else if (args.length == 3) {
+            ArrayList<String> list = new ArrayList<>();
+            for (Feature feature : Feature.features) {
+                if (feature.name.toLowerCase().replaceAll(" ", "").equals(args[0].toLowerCase())) {
+                    for (Setting setting : feature.settings) {
+                        list.add(setting.name.toLowerCase().replaceAll(" ", ""));
+                    }
+                    break;
+                }
+            }
+            return getListOfStringsMatchingLastWord(args, list);
         }
         return null;
     }
@@ -52,7 +65,7 @@ public class FeatureCommand extends CommandBase implements ICommand {
         for (Feature feature : Feature.features) {
             if (arg1[0].toLowerCase().equals(feature.getCommandName().toLowerCase().replaceAll(" ", ""))) {
                 found = true;
-                if (arg1.length == 2) {
+                if (arg1.length >= 2) {
                     if (arg1[1].toLowerCase().equals("toggle")) {
                         feature.toggle();
                         Utils.addChatMessage(feature.getCommandName() + " is now " + (feature.isEnabled() ? "&aEnabled" : "&cDisabled"));
@@ -65,6 +78,7 @@ public class FeatureCommand extends CommandBase implements ICommand {
                                     if (setting.name.toLowerCase().replaceAll(" ", "").equals(arg1[2].toLowerCase())) {
                                         if (setting instanceof BooleanSetting) {
                                             ((BooleanSetting) setting).value = !((BooleanSetting) setting).value;
+                                            Utils.addChatMessage(setting.name + " set to " + ((BooleanSetting) setting).value);
                                         }
                                     }
                                 }
@@ -73,7 +87,7 @@ public class FeatureCommand extends CommandBase implements ICommand {
                                 for (Setting setting : feature.settings) {
                                     features += "/" + setting.getSettingName().toLowerCase().replaceAll(" ", "");
                                 }
-                                Utils.addChatMessage("&cUsage /feature " + feature.getCommandName().toLowerCase().replaceAll(" ", "") + " setting <" + features.replaceFirst("/", "") + ">");
+                                Utils.addChatMessage("&cUsage: /feature " + feature.getCommandName().toLowerCase().replaceAll(" ", "") + " setting <" + features.replaceFirst("/", "") + ">");
                             }
                         }
                     }
