@@ -17,6 +17,10 @@ public class ConfigUtils {
         if (!hasKey("main", "APIKey")) writeStringConfig("main", "APIKey", "");
         FungsDungeonMod.APIKey = getString("main", "APIKey");
 
+        //ignore list
+        if (!hasKey("main", "AutoKickList")) writeStringConfig("main", "AutoKickList", "");
+        FungsDungeonMod.autoKick = Utils.translateStringToArrayList(getString("main", "AutoKickList"));
+
         //Feature config
         for (Feature feature : Feature.features) {
             if (!hasKey("feature-toggle", feature.name)) writeBooleanConfig("feature-toggle", feature.name, false);

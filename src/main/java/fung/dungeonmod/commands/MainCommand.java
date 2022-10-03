@@ -1,6 +1,7 @@
 package fung.dungeonmod.commands;
 
 import fung.dungeonmod.features.core.Feature;
+import fung.dungeonmod.utils.ConfigUtils;
 import fung.dungeonmod.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
@@ -20,40 +21,33 @@ public class MainCommand extends CommandBase implements ICommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender sender) {
         return EnumChatFormatting.RED + "Usage: /fungdungeonmod <feature> <settings>";
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return Arrays.asList("toggle");
+    public void processCommand(ICommandSender arg0, String[] arg1) {
+        if (arg1.length == 1 && arg1[0].toLowerCase().equals("reloadconfig")) {
+            ConfigUtils.reloadConfig();
+            return;
+        }
+        Utils.addChatMessage("&lThanks for using Fung's Dungeon Mod, here is some tips for you:\n" +
+                             " &2Feature Settings Command:\n" +
+                             "  &a/feature <Feature Name> <toggle/setting> [Setting Value]\n" +
+                             "  &aFor example: /feature runview toggle\n" +
+                             " &2Auto Kick Command:\n" +
+                             "  &a/autokick <add/remove/list> <Player Name> [Reason]\n" +
+                             "  &aFor example: /autokick add zapdragon dumb ass shitter"
+        );
     }
 
     @Override
-    public void processCommand(ICommandSender arg0, String[] arg1) {
-        if (arg1.length == 0) {
-            Utils.addChatMessage(getCommandUsage(arg0));
-            return;
-        }
-        switch (arg1[0].toLowerCase()) {
-            case "setting":
-                if (arg1.length != 2) {
-                    sendToggleUsage();
-                    return;
-                } else {
-                    for (Feature feature : Feature.features) {
-                        if (arg1[1].toLowerCase().equals(feature.getCommandName().toLowerCase().replaceAll(" ", ""))) {
-
-                        }
-                    }
-                }
-                break;
-            default:
-                Utils.addChatMessage(getCommandUsage(arg0));
-        }
-    }
-
-    public void sendToggleUsage() {
-        Utils.addChatMessage("&cUsage: /fungdungeonmod toggle <runreview>");
+    public List<String> getCommandAliases() {
+        return Arrays.asList("fung", "fdm", "fungdungeonmod");
     }
 }

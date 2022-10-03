@@ -1,7 +1,9 @@
 package fung.dungeonmod;
 
+import fung.dungeonmod.commands.AutoKickCommand;
 import fung.dungeonmod.commands.FeatureCommand;
 import fung.dungeonmod.commands.MainCommand;
+import fung.dungeonmod.features.AutoKick;
 import fung.dungeonmod.features.RunReview;
 import fung.dungeonmod.features.core.Feature;
 import fung.dungeonmod.utils.APIUtils;
@@ -18,13 +20,16 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayList;
+
 
 @Mod(modid = FungsDungeonMod.MODID, version = FungsDungeonMod.VERSION, acceptedMinecraftVersions="[1.8.9]")
 public class FungsDungeonMod {
 
     public static final String MODID = "Fung's Dungeon Mod";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
     public static Minecraft mc = Minecraft.getMinecraft();
+    public static ArrayList<String> autoKick = new ArrayList<>();
 
     public static String APIKey;
     public static int tickAmount = 0;
@@ -56,6 +61,8 @@ public class FungsDungeonMod {
         ConfigUtils.reloadConfig();
 
         ClientCommandHandler.instance.registerCommand(new FeatureCommand());
+        ClientCommandHandler.instance.registerCommand(new MainCommand());
+        ClientCommandHandler.instance.registerCommand(new AutoKickCommand());
 
         MinecraftForge.EVENT_BUS.register(new FungsDungeonMod());
         MinecraftForge.EVENT_BUS.register(new SkyblockUtils());
@@ -81,5 +88,6 @@ public class FungsDungeonMod {
 
     public static void registerAllFeatures() {
         Feature.features.add(new RunReview());
+        Feature.features.add(new AutoKick());
     }
 }

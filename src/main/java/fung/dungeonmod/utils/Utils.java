@@ -6,11 +6,28 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Utils {
     public static Minecraft mc = Minecraft.getMinecraft();
 
     public static void sendMessage(String message) {
         mc.thePlayer.sendChatMessage(message);
+    }
+
+    public static ArrayList<String> translateStringToArrayList(String str) {
+        ArrayList<String> array = new ArrayList<>();
+        if (!str.equals("")) array.addAll(Arrays.asList(str.split("%02&")));
+        return array;
+    }
+
+    public static String translateArrayToString(ArrayList<String> array) {
+        String str = "";
+        for (String string : array) {
+            str += str.equals("") ? string : "%02&" + string;
+        }
+        return str;
     }
 
     public static String translateAlternateColorCodes(String textToTranslate) {
@@ -26,6 +43,19 @@ public class Utils {
 
     public static void addChatMessage(String Message) {
         mc.thePlayer.addChatMessage(new ChatComponentText("§a[Fung] " + translateAlternateColorCodes(Message)));
+    }
+
+    public static void addMessageWithoutPrefix(String Message) {
+        mc.thePlayer.addChatMessage(new ChatComponentText(translateAlternateColorCodes(Message)));
+    }
+
+    static final String[] hypixelRanks = {"VIP", "VIP+", "MVP", "MVP+", "MVP++", "YOUTUBE", "GM", "ADMIN", "OWNER"};
+
+    public static String getUnrankedMessage(String message) {
+        for (String rank : hypixelRanks) {
+            message = message.replace("[" + rank + "] ", "");
+        }
+        return message;
     }
 
     public static void addUpdateVersion() {

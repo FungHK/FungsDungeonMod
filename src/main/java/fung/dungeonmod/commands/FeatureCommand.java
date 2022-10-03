@@ -3,6 +3,7 @@ package fung.dungeonmod.commands;
 import fung.dungeonmod.features.core.Feature;
 import fung.dungeonmod.features.core.Setting;
 import fung.dungeonmod.features.core.settings.BooleanSetting;
+import fung.dungeonmod.utils.ConfigUtils;
 import fung.dungeonmod.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
@@ -27,7 +28,11 @@ public class FeatureCommand extends CommandBase implements ICommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return EnumChatFormatting.RED + "Usage: /feature <feature> <toggle/setting> <value>";
+        String features = "";
+        for (Feature feature : Feature.features) {
+            features += "/" + feature.name.toLowerCase().replace(" ", "");
+        }
+        return EnumChatFormatting.RED + "Usage: /feature <" + features.replaceFirst("/", "") + "> <toggle/setting> [value]";
     }
 
     @Override
@@ -69,7 +74,8 @@ public class FeatureCommand extends CommandBase implements ICommand {
                     if (arg1[1].toLowerCase().equals("toggle")) {
                         feature.toggle();
                         Utils.addChatMessage(feature.getCommandName() + " is now " + (feature.isEnabled() ? "&aEnabled" : "&cDisabled"));
-                    } else {
+                        ConfigUtils.writeBooleanConfig("feature-toggle", feature.name, false);
+                    } else if (arg1[1].toLowerCase().equals("setting")) {
                         if (feature.settings.isEmpty()) {
                             Utils.addChatMessage("&c" + feature.getCommandName() + " doesn't have any settings :(");
                         } else {
@@ -79,17 +85,16 @@ public class FeatureCommand extends CommandBase implements ICommand {
                                         if (setting instanceof BooleanSetting) {
                                             ((BooleanSetting) setting).value = !((BooleanSetting) setting).value;
                                             Utils.addChatMessage(setting.name + " set to " + ((BooleanSetting) setting).value);
+                                            ConfigUtils.writeBooleanConfig("feature-settings", feature.name + "-" + setting.name, false);
                                         }
+                                        return;
                                     }
                                 }
-                            } else {
-                                String features = "";
-                                for (Setting setting : feature.settings) {
-                                    features += "/" + setting.getSettingName().toLowerCase().replaceAll(" ", "");
-                                }
-                                Utils.addChatMessage("&cUsage: /feature " + feature.getCommandName().toLowerCase().replaceAll(" ", "") + " setting <" + features.replaceFirst("/", "") + ">");
                             }
+                            addFeatureSettingUsage(feature);
                         }
+                    } else {
+                        Utils.addChatMessage("&cUsage: /feature " + feature.getCommandName().toLowerCase().replaceAll(" ", "") + " <toggle/setting> [value]");
                     }
                 } else {
                     Utils.addChatMessage(getCommandUsage(arg0));
@@ -100,6 +105,14 @@ public class FeatureCommand extends CommandBase implements ICommand {
         if (!found) {
             Utils.addChatMessage(getCommandUsage(arg0));
         }
+    }
+
+    public static void addFeatureSettingUsage(Feature feature) {
+        String features = "";
+        for (Setting setting : feature.settings) {
+            features += "/" + setting.getSettingName().toLowerCase().replaceAll(" ", "");
+        }
+        Utils.addChatMessage("&cUsage: /feature " + feature.getCommandName().toLowerCase().replaceAll(" ", "") + " setting <" + features.replaceFirst("/", "") + ">");
     }
 
 }
