@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class FungsDungeonMod {
 
     public static final String MODID = "Fung's Dungeon Mod";
-    public static final String VERSION = "1.0.1";
+    public static final String VERSION = "1.0.2";
     public static Minecraft mc = Minecraft.getMinecraft();
     public static ArrayList<String> autoKick = new ArrayList<>();
 

@@ -74,7 +74,7 @@ public class FeatureCommand extends CommandBase implements ICommand {
                     if (arg1[1].toLowerCase().equals("toggle")) {
                         feature.toggle();
                         Utils.addChatMessage(feature.getCommandName() + " is now " + (feature.isEnabled() ? "&aEnabled" : "&cDisabled"));
-                        ConfigUtils.writeBooleanConfig("feature-toggle", feature.name, false);
+                        ConfigUtils.writeBooleanConfig("feature-toggle", feature.name, feature.enabled);
                     } else if (arg1[1].toLowerCase().equals("setting")) {
                         if (feature.settings.isEmpty()) {
                             Utils.addChatMessage("&c" + feature.getCommandName() + " doesn't have any settings :(");
@@ -85,7 +85,7 @@ public class FeatureCommand extends CommandBase implements ICommand {
                                         if (setting instanceof BooleanSetting) {
                                             ((BooleanSetting) setting).value = !((BooleanSetting) setting).value;
                                             Utils.addChatMessage(setting.name + " set to " + ((BooleanSetting) setting).value);
-                                            ConfigUtils.writeBooleanConfig("feature-settings", feature.name + "-" + setting.name, false);
+                                            ConfigUtils.writeBooleanConfig("feature-settings", feature.name + "-" + setting.name, ((BooleanSetting) setting).value);
                                         }
                                         return;
                                     }
