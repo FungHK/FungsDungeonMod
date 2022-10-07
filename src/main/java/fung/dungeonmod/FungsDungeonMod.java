@@ -1,10 +1,7 @@
 package fung.dungeonmod;
 
-import fung.dungeonmod.commands.AutoKickCommand;
-import fung.dungeonmod.commands.FeatureCommand;
-import fung.dungeonmod.commands.MainCommand;
-import fung.dungeonmod.features.AutoKick;
-import fung.dungeonmod.features.RunReview;
+import fung.dungeonmod.commands.*;
+import fung.dungeonmod.features.*;
 import fung.dungeonmod.features.core.Feature;
 import fung.dungeonmod.utils.APIUtils;
 import fung.dungeonmod.utils.ConfigUtils;
@@ -27,7 +24,7 @@ import java.util.ArrayList;
 public class FungsDungeonMod {
 
     public static final String MODID = "Fung's Dungeon Mod";
-    public static final String VERSION = "1.0.2";
+    public static final String VERSION = "1.0.3";
     public static Minecraft mc = Minecraft.getMinecraft();
     public static ArrayList<String> autoKick = new ArrayList<>();
 
@@ -89,5 +86,6 @@ public class FungsDungeonMod {
     public static void registerAllFeatures() {
         Feature.features.add(new RunReview());
         Feature.features.add(new AutoKick());
+        Feature.features.add(new AutoCheckArmor());
     }
 }

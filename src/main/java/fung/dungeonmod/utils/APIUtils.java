@@ -1,6 +1,8 @@
 package fung.dungeonmod.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fung.dungeonmod.FungsDungeonMod;
 
@@ -15,6 +17,44 @@ import java.util.Scanner;
 
 public class APIUtils {
 	public static String blackList, latestVersion, discordLink;
+
+	public static String getLatestProfileID(String UUID, String key) {
+
+		// Get profiles
+		System.out.println("Fetching profiles...");
+
+		JsonObject profilesResponse = getResponse("https://api.hypixel.net/skyblock/profiles?uuid=" + UUID + "&key=" + key, true);
+		if (!profilesResponse.get("success").getAsBoolean()) {
+			String reason = profilesResponse.get("cause").getAsString();
+			Utils.addChatMessage("Failed with reason: " + reason);
+			return null;
+		}
+		if (profilesResponse.get("profiles").isJsonNull()) {
+			Utils.addChatMessage("This player doesn't appear to have played SkyBlock.");
+			return null;
+		}
+
+		// Loop through profiles to find latest
+		System.out.println("Looping through profiles...");
+		String latestProfile = "";
+		long latestSave = 0;
+		JsonArray profilesArray = profilesResponse.get("profiles").getAsJsonArray();
+
+		for (JsonElement profile : profilesArray) {
+			JsonObject profileJSON = profile.getAsJsonObject();
+			long profileLastSave = 1;
+			if (profileJSON.get("members").getAsJsonObject().get(UUID).getAsJsonObject().has("last_save")) {
+				profileLastSave = profileJSON.get("members").getAsJsonObject().get(UUID).getAsJsonObject().get("last_save").getAsLong();
+			}
+
+			if (profileLastSave > latestSave) {
+				latestProfile = profileJSON.get("profile_id").getAsString();
+				latestSave = profileLastSave;
+			}
+		}
+
+		return latestProfile;
+	}
 
 	public static int getSecretCount(String username) {
 		JsonObject secretResponse = getResponse("https://api.hypixel.net/player?key=" + FungsDungeonMod.APIKey + "&uuid=" + getUUID(username), true);

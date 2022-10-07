@@ -1,5 +1,6 @@
 package fung.dungeonmod.commands;
 
+import fung.dungeonmod.features.AutoCheckArmor;
 import fung.dungeonmod.features.core.Feature;
 import fung.dungeonmod.utils.ConfigUtils;
 import fung.dungeonmod.utils.Utils;
@@ -32,9 +33,17 @@ public class MainCommand extends CommandBase implements ICommand {
 
     @Override
     public void processCommand(ICommandSender arg0, String[] arg1) {
-        if (arg1.length == 1 && arg1[0].toLowerCase().equals("reloadconfig")) {
-            ConfigUtils.reloadConfig();
-            return;
+        if (arg1.length >= 1) {
+            String command = arg1[0].toLowerCase();
+            switch (command) {
+                case "reloadconfig":
+                    ConfigUtils.reloadConfig();
+                    Utils.addChatMessage("Config reloaded");
+                    return;
+                case "armor":
+                    AutoCheckArmor.checkArmor(arg1[1]);
+                    return;
+            }
         }
         Utils.addChatMessage("&lThanks for using Fung's Dungeon Mod, here is some tips for you:\n" +
                              " &2Feature Settings Command:\n" +
